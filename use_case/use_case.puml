@@ -1,0 +1,68 @@
+@startuml
+left to right direction
+
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+skinparam usecase {
+    BackgroundColor #EAF2F8
+    BorderColor #527A9E
+    ArrowColor #526B82
+}
+
+skinparam actor {
+    BorderColor #40566B
+    FontColor #263746
+}
+
+actor "Пользователь" as User
+actor "Учитель" as Teacher
+actor "Ученик" as Student
+
+Teacher --|> User
+Student --|> User
+
+rectangle "Веб-приложение для адаптивного обучения математике" {
+
+    package "Работа с заданиями" {
+        usecase "Создать задание" as UC1
+        usecase "Редактировать задание" as UC2
+        usecase "Удалить задание" as UC3
+        usecase "Назначить задание" as UC4
+        usecase "Выбрать ученика\nили группу" as UC5
+    }
+
+    package "Обучение" {
+        usecase "Просмотреть назначенные\nзадания" as UC6
+        usecase "Выполнить задание" as UC7
+        usecase "Отправить числовой ответ" as UC8
+        usecase "Обработать ответ ученика,\nопределить сложность следующего задания" as UC9
+        usecase "Просмотреть результат\nвыполнения" as UC10
+    }
+
+    package "Анализ успеваемости" {
+        usecase "Просмотреть результаты\nобучения" as UC11
+        usecase "Просмотреть аналитику\nуспеваемости" as UC12
+    }
+
+    usecase "Войти в систему" as UC13
+}
+
+User -- UC13
+
+Teacher -- UC1
+Teacher -- UC2
+Teacher -- UC3
+Teacher -- UC4
+Teacher -- UC11
+Teacher -- UC12
+
+Student -- UC6
+Student -- UC7
+Student -- UC10
+
+UC4 ..> UC5 : <<include>>
+UC7 ..> UC8 : <<include>>
+UC8 ..> UC9 : <<include>>
+
+@enduml
