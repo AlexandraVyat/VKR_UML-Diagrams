@@ -1,0 +1,125 @@
+@startuml
+left to right direction
+
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam packageStyle rectangle
+skinparam linetype ortho
+skinparam nodesep 55
+skinparam ranksep 65
+
+skinparam class {
+    BackgroundColor #EAF2F8
+    BorderColor #527A9E
+    ArrowColor #526B82
+}
+
+skinparam package {
+    BorderColor #A0B5C8
+}
+
+package "Пользователи" {
+    abstract class User {
+        - id: int
+        - name: str
+        - login: str
+        - passwordHash: str
+    }
+
+    class Teacher {
+        + createTask(): Task
+        + editTask(): void
+        + deleteTask(): void
+        + assignTask(): TaskAssignment
+        + viewResults(): List<Result>
+        + viewAnalytics(): void
+    }
+
+    class Student {
+        - currentDifficulty: DifficultyLevel
+        + viewAssignments(): List<TaskAssignment>
+        + submitAnswer(): Answer
+        + viewResult(): Result
+    }
+
+    class StudentGroup {
+        - id: int
+        - name: str
+    }
+
+    User <|-- Teacher
+    User <|-- Student
+}
+
+package "Учебные материалы" {
+    class Task {
+        - id: int
+        - title: str
+        - description: str
+        - difficulty: DifficultyLevel
+        + addExercise(): void
+        + editExercise(): void
+    }
+
+    class Exercise {
+        - id: int
+        - expression: str
+        - correctAnswer: float
+        - position: int
+    }
+
+    enum DifficultyLevel {
+        INITIAL
+        MEDIUM
+        ADVANCED
+    }
+
+    Task "1" *-- "1..*" Exercise : содержит
+    Task ..> DifficultyLevel
+}
+
+package "Выполнение заданий" {
+    class TaskAssignment {
+        - id: int
+        - assignedAt: DateTime
+        - dueDate: DateTime
+        - status: str
+    }
+
+    class Answer {
+        - id: int
+        - value: float
+        - isCorrect: bool
+        - submittedAt: DateTime
+    }
+
+    class Result {
+        - id: int
+        - correctCount: int
+        - totalExercises: int
+        - percentage: float
+        - completedAt: DateTime
+        + calculatePercentage(): float
+    }
+
+    TaskAssignment "1" -- "0..*" Result
+    Result "1" *-- "0..*" Answer
+    Exercise -- Answer
+}
+
+Teacher -- Task
+Teacher -- TaskAssignment
+
+Task -- TaskAssignment
+
+StudentGroup -- Student
+
+TaskAssignment --> Student
+TaskAssignment --> StudentGroup
+
+Student -- Result
+
+Student ..> DifficultyLevel
+
+@enduml
+
