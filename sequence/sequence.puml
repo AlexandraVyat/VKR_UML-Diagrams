@@ -1,0 +1,49 @@
+@startuml
+
+skinparam shadowing false
+skinparam sequence {
+    ArrowColor #526B82
+    LifeLineBorderColor #527A9E
+    LifeLineBackgroundColor #EAF2F8
+    ParticipantBorderColor #527A9E
+    ParticipantBackgroundColor #EAF2F8
+    ActorBorderColor #40566B
+    ActorFontColor #263746
+}
+
+actor "Учитель" as Teacher
+participant "Веб-приложение" as System
+database "База данных" as DB
+
+Teacher -> System: Открыть создание задания
+System --> Teacher: Отобразить форму создания
+
+Teacher -> System: Ввести название, описание и сложность
+
+loop Добавление упражнений
+    Teacher -> System: Ввести условие и правильный ответ
+    Teacher -> System: Добавить упражнение
+    System --> Teacher: Подтвердить добавление
+end
+
+Teacher -> System: Сохранить задание
+System -> System: Проверить заполнение данных
+
+alt Данные корректны
+    System -> DB: Сохранить задание и упражнения
+    DB --> System: Подтвердить сохранение
+
+    Teacher -> System: Выбрать ученика или группу
+    System --> Teacher: Отобразить доступных получателей
+
+    Teacher -> System: Подтвердить назначение
+    System -> DB: Создать назначение задания
+    DB --> System: Подтвердить создание назначения
+
+    System --> Teacher: Показать подтверждение назначения
+
+else Данные содержат ошибки
+    System --> Teacher: Показать сообщение об ошибке
+end
+
+@enduml
