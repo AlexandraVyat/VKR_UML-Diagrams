@@ -1,0 +1,36 @@
+@startuml
+
+skinparam shadowing false
+skinparam state {
+    BackgroundColor #EAF2F8
+    BorderColor #527A9E
+    ArrowColor #526B82
+    FontColor #263746
+}
+
+[*] --> Created : Создание задания
+
+state "Создано" as Created
+state "Назначено" as Assigned
+state "Выполняется" as InProgress
+state "Ожидает проверки" as Checking
+state "Результат рассчитан" as Calculated
+state "Завершено" as Completed
+state "Отменено" as Cancelled
+
+Created --> Assigned : Назначение ученику или группе
+
+Assigned --> InProgress : Начало выполнения
+
+InProgress --> Checking : Отправка всех ответов
+
+Checking --> Calculated : Проверка ответов и расчёт результата
+
+Calculated --> Completed : Определение сложности следующего задания
+
+Assigned --> Cancelled : Отмена назначения
+
+Cancelled --> [*]
+Completed --> [*]
+
+@enduml
